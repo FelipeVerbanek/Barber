@@ -11,6 +11,8 @@ const ProviderController = require('./app/controllers/ProviderController')
 const AppointmentController = require('./app/controllers/AppointmentController')
 const SheduleController = require('./app/controllers/ScheduleController')
 const NotificationController = require('./app/controllers/NotificationController')
+const AvailableController = require('./app/controllers/AvailableController')
+
 const routes = new Router()
 const upload = multer(multerConfig)
 
@@ -22,6 +24,7 @@ routes.use(AuthMiddleware)//Verifica autenticação
 routes.put('/users', UserController.update)
 
 routes.get('/providers', ProviderController.index)
+routes.get('/providers/:providerId/available', AvailableController.index)
 //Upload do avatar
 routes.post('/files', upload.single('file'),FileController.store)
 
