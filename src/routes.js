@@ -2,7 +2,7 @@ const { Router } = require('express')
 const multer = require('multer')
 const multerConfig = require('./configs/multer')
 
-const AuthMiddleware = require('./middlewares/auth')
+const AuthMiddleware = require('./app/middlewares/auth')
 
 const UserController = require('./app/controllers/UserController')
 const SessionController = require('./app/controllers/SessionController')
@@ -10,7 +10,7 @@ const FileController = require('./app/controllers/FileController')
 const ProviderController = require('./app/controllers/ProviderController')
 const AppointmentController = require('./app/controllers/AppointmentController')
 const SheduleController = require('./app/controllers/ScheduleController')
-
+const NotificationController = require('./app/controllers/NotificationController')
 const routes = new Router()
 const upload = multer(multerConfig)
 
@@ -29,6 +29,11 @@ routes.post('/appointments',AppointmentController.store )
 //Listar os agendamentos
 routes.get('/appointments',AppointmentController.index)
 //Listar os agendamentos do provider
+routes.delete('/appointments/:id',AppointmentController.delete )
+
 routes.get('/schedules', SheduleController.index )
+
+routes.get('/notifications', NotificationController.index)
+routes.put('/notifications/:id', NotificationController.update)
 
 module.exports = routes
