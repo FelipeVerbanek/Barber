@@ -1,6 +1,7 @@
 require('dotenv/config')
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 require('express-async-errors')
 const Sentry = require('@sentry/node')
 const Youch = require('youch')
@@ -23,8 +24,9 @@ class App{
 
     moddlewares() {
         this.server.use(Sentry.Handlers.requestHandler());
+        this.server.use(cors());
         this.server.use(express.json());
-        this.server.use('/files', express.static(path.resolve(__dirname, '..', 'temp', 'uploads')))
+        this.server.use('/files', express.static(path.resolve(__dirname, '..', 'temp', 'uploads')));
     }
 
     routes(){
