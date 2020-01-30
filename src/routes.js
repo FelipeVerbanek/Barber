@@ -16,13 +16,14 @@ const AvailableController = require('./app/controllers/AvailableController')
 const validateUserStore = require('./app/validators/UserStore')
 const validateUserUpdate = require('./app/validators/UserUpdate')
 const validateAppointment = require('./app/validators/AppointmentStore')
+const validateSession = require('./app/validators/SessionStore')
 
 const routes = new Router()
 const upload = multer(multerConfig)
 
 
 routes.post('/users',validateUserStore, UserController.store)
-routes.post('/sessions', SessionController.store)
+routes.post('/sessions', validateSession, SessionController.store)
 
 routes.use(AuthMiddleware)//Verifica autenticação
 //Routas que precisa de autenticação

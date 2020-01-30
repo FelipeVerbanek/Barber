@@ -1,4 +1,3 @@
-const Yup = require('yup')
 const User = require('../models/User')
 const File = require('../models/File')
 
@@ -34,7 +33,6 @@ class UserController {
                         "error" : "User already exists."
                     })
                 }
-    
             }
             //Verificar se a senha antiga está corretá
             if (oldPassword && !(await user.checkPassword(oldPassword)))
