@@ -6,6 +6,7 @@ const Appointment = require('../models/Appointment')
 const User = require('../models/User')
 const File = require('../models/File')
 
+const Cache = require('../../lib/Cache')
 const createAppointmentService = require('../services/CreateAppointmentService')
 
 const CancellationMail = require('../jobs/CancellationMail')
@@ -14,7 +15,14 @@ const Queue = require('../../lib/Queue')
 class AppointmentController{
     async index(req, res){
         const {page =  1} = req.query
-        console.log(page)
+        
+        const cacheKey = `user:${req.userId}:appointments:${page}`
+        const cached = await  Cache.get(cacheKey)
+
+        if(cached){
+            return res.json(cached)
+        }
+
         //Buscando as informações dos appointment, provider, avatar
         const appointments = await Appointment.findAll({
             where: {
@@ -36,6 +44,8 @@ class AppointmentController{
             }]
         })
 
+        await Cache.set(cacheKey, appointments)
+
         return res.json(appointments)
     }
     async store(req,res){
@@ -43,6 +53,7 @@ class AppointmentController{
         const {provider_id, date} = req.body
         try{
             const appointment = await createAppointmentService.run({ provider_id, userId: req.userId, date})
+            
 
             return res.json(appointment)
 
@@ -87,7 +98,9 @@ class AppointmentController{
         await Queue.add(CancellationMail.key, {
             appointment
         })
-        
+
+        await Cache.invalidatePrefix(`user:${req.userId}:appointments`)
+
         return res.json(appointment)
     }
 }

@@ -4,6 +4,7 @@ const Appointment = require('../models/Appointment')
 const User = require('../models/User')
 const serviceNotification = require('./NotificationService')
 
+const Cache = require('../../lib/Cache')
 
 class CreateAppointmentService{
 
@@ -45,6 +46,8 @@ class CreateAppointmentService{
         } )
 
         await serviceNotification.run({userId, provider_id, hourStart})
+
+        await Cache.invalidatePrefix(`user:${userId}:appointments`)
 
         return appointment
         

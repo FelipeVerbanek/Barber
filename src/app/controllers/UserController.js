@@ -1,6 +1,8 @@
 const User = require('../models/User')
 const File = require('../models/File')
 
+const Cache = require('../../lib/Cache')
+
 class UserController {
     async store(req, res){
         //Verifica se e-mail já está sendo utilizado
@@ -13,6 +15,10 @@ class UserController {
 
         const { id, name, email, provider } = await User.create(req.body)
         
+        if(provider){
+            await Cache.invalidate('providers')
+        }
+
         return res.json({
             id, name, email, provider
         })
@@ -49,6 +55,11 @@ class UserController {
                     attributes: ['id', 'path', 'url']
                 }]
             })
+
+            if(provider){
+                await Cache.invalidate('providers')
+            }
+
             return res.json({
                 id, name, email, provider, avatar
             })
