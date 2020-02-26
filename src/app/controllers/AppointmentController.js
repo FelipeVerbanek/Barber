@@ -14,7 +14,7 @@ const Queue = require('../../lib/Queue')
 
 class AppointmentController{
     async index(req, res){
-        const {page =  1} = req.query
+        const {page =  1} = req.query        
         
         const cacheKey = `user:${req.userId}:appointments:${page}`
         const cached = await  Cache.get(cacheKey)

@@ -15,7 +15,7 @@ class App{
         this.server = express();
 
         Sentry.init(sentryConfig)
-
+        console.log('start')
 
         this.moddlewares();
         this.routes();
